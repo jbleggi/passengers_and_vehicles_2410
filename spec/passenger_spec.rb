@@ -5,9 +5,10 @@ RSpec.configure do |config|
 end
 
 RSpec.describe Passenger do 
-  describe "#initialization" do 
+  describe "instantiation" do 
     it "exists" do 
       charlie = Passenger.new({"name" => "Charlie", "age" => 18})  
+
       expect(charlie).to be_a Passenger
     end
 

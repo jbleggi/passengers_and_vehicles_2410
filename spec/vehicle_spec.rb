@@ -3,7 +3,7 @@ require_relative '../lib/passenger'
 
 RSpec.configure do |config|
     config.formatter = :documentation
-  end
+end
 
 RSpec.describe Vehicle do
     describe "#initialization" do
@@ -29,7 +29,13 @@ RSpec.describe Vehicle do
         
     end
 
-    describe '#speed' do
+    describe '#speeding?' do
+        it 'defaults to false' do 
+            vehicle = Vehicle.new("2001", "Honda", "Civic")    
+            
+            expect(vehicle.speeding?).to be false
+        end
+        
         it 'reassigns #speeding to true' do
             vehicle = Vehicle.new("2001", "Honda", "Civic")    
             vehicle.speed
@@ -39,12 +45,12 @@ RSpec.describe Vehicle do
     end
 
     describe '#passengers' do
-        it 'is an empty array at initialization' do
+        it 'starts as empty' do
             vehicle = Vehicle.new("2001", "Honda", "Civic")    
             expect(vehicle.passengers).to eq([])
         end
 
-        it 'can assign passengers to vehicle' do
+        it 'can add passengers' do
             vehicle = Vehicle.new("2001", "Honda", "Civic")    
             charlie = Passenger.new({"name" => "Charlie", "age" => 18})
             jude = Passenger.new({"name" => "Jude", "age" => 20}) 
@@ -58,6 +64,8 @@ RSpec.describe Vehicle do
 
             vehicle.add_passenger(taylor)
             expect(vehicle.passengers.count).to eq(3)
+
+            expect(vehicle.passengers).to eq [charlie, jude, taylor]
         end
 
         it 'can count the number of adult passengers' do

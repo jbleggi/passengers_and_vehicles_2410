@@ -1,67 +1,169 @@
 require './lib/park'
+require './lib/passenger'
+require './lib/vehicle'
 
 RSpec.configure do |config|
   config.formatter = :documentation
 end
 
 RSpec.describe Park do
-    describe '#initialization' do
+    describe 'instantiation' do
         it 'exists' do
-            park1 = Park.new('Shenandoah', 20)
+            park = Park.new('Shenandoah', 20)
             
-            expect(park1).to be_a Park
+            expect(park).to be_a Park
         end
-        
-        it 'has a name and lists admission price per adult' do
-            park1 = Park.new('Shenandoah', 20)
+         
+        it 'has a name and admission cost' do
+            park = Park.new('Shenandoah', 20)
 
-            expect(park1.name).to eq('Shenandoah')
-            expect(park1.admission).to eq(20)
+            expect(park.name).to eq('Shenandoah')
+            expect(park.admission).to eq(20)
             
         end
   
-        it 'can contain a list of vehicles entered' do
-            park1 = Park.new('Shenandoah', 20)
-
-            expect(park1.vehicles).to eq([])
-        end
-
-        it 'can contain a list of visitors admitted' do
-            park1 = Park.new('Shenandoah', 20)
-
-            expect(park1.visitors).to eq([])
-        end
-
     end
+    
+    describe '#vehicles' do
+        it 'starts as empty' do
+            park = Park.new('Shenandoah', 20)
 
-    describe 'entry' do
+            expect(park.vehicles).to eq([])
+        end
 
         it 'can add vehicles' do
-            park1 = Park.new('Shenandoah', 20)
-            vehicle = Vehicle.new("2001", "Honda", "Civic")  
+            park = Park.new('Shenandoah', 20)
+            vehicle1 = Vehicle.new("2001", "Honda", "Civic") 
+            vehicle2 = Vehicle.new("2018", "VW", "Tiguan")
+            vehicle3 = Vehicle.new("2016", "Ford", "Fiesta")
         
-            park1.admit_vehicle(vehicle)
+            park.add_vehicle(vehicle1)
+            park.add_vehicle(vehicle2)
+            park.add_vehicle(vehicle3)
 
-            expect(park1.vehicles).to eq([vehicle])
+    
+            expect(park.vehicles).to eq [vehicle1, vehicle2, vehicle3]
+        end
+    end
+
+    describe '#passengers' do
+        it 'starts as empty' do
+            park = Park.new('Shenandoah', 20)
+
+            expect(park.passengers).to eq([])
         end
 
-        xit 'can add visitors from vehicle passenger array' do
-            park1 = Park.new('Shenandoah', 20)
-            vehicle = Vehicle.new("2001", "Honda", "Civic") 
+        it 'lists all passengers' do
+            park = Park.new('Shenandoah', 20)
+            
+            vehicle1 = Vehicle.new("2001", "Honda", "Civic") 
+            vehicle2 = Vehicle.new("2018", "VW", "Tiguan")
+            vehicle3 = Vehicle.new("2016", "Ford", "Fiesta")
+
             charlie = Passenger.new({"name" => "Charlie", "age" => 18})
+            jude = Passenger.new({"name" => "Jude", "age" => 20}) 
+            taylor = Passenger.new({"name" => "Taylor", "age" => 12}) 
+            bob = Passenger.new({"name" => "Bob", "age" => 35}) 
+            ruby = Passenger.new({"name" => "Ruby", "age" => 9}) 
 
-            vehicle.add_passenger(charlie)
+            vehicle1.add_passenger(taylor)
+            vehicle1.add_passenger(jude)
+            vehicle2.add_passenger(charlie)       
+            vehicle3.add_passenger(bob)
+            vehicle3.add_passenger(ruby)    
+            
+            park.add_vehicle(vehicle1)
+            park.add_vehicle(vehicle2)
+            park.add_vehicle(vehicle3)
 
-            park1.admit_passengers(vehicle)
+            expect(park.passengers).to eq [taylor, jude, charlie, bob, ruby]
 
-            expect(park1.visitors).not_to be_empty
         end
+    end
 
+    describe '#admission_collected' do
+        it 'calculates revenue for park' do
+            park = Park.new('Shenandoah', 20)
+            
+            vehicle1 = Vehicle.new("2001", "Honda", "Civic") 
+            vehicle2 = Vehicle.new("2018", "VW", "Tiguan")
+            vehicle3 = Vehicle.new("2016", "Ford", "Fiesta")
+    
+            charlie = Passenger.new({"name" => "Charlie", "age" => 18})
+            jude = Passenger.new({"name" => "Jude", "age" => 20}) 
+            taylor = Passenger.new({"name" => "Taylor", "age" => 12}) 
+            bob = Passenger.new({"name" => "Bob", "age" => 35}) 
+            ruby = Passenger.new({"name" => "Ruby", "age" => 9}) 
+    
+            vehicle1.add_passenger(taylor)
+            vehicle1.add_passenger(jude)
+            vehicle2.add_passenger(charlie)       
+            vehicle3.add_passenger(bob)
+            vehicle3.add_passenger(ruby)    
+                
+            park.add_vehicle(vehicle1)
+            park.add_vehicle(vehicle2)
+            park.add_vehicle(vehicle3)
 
-        it 'can generate total revenue collected from admission charged' do
-            park1 = Park.new('Shenandoah', 20)
+            expect(park.admission_collected).to eq 60
+        end
+    end
+
+    describe "#attendee_names" do
+        it "lists all names in ABC order" do
+            park = Park.new('Shenandoah', 20)
+            
+            vehicle1 = Vehicle.new("2001", "Honda", "Civic") 
+            vehicle2 = Vehicle.new("2018", "VW", "Tiguan")
+            vehicle3 = Vehicle.new("2016", "Ford", "Fiesta")
+
+            charlie = Passenger.new({"name" => "Charlie", "age" => 18})
+            jude = Passenger.new({"name" => "Jude", "age" => 20}) 
+            taylor = Passenger.new({"name" => "Taylor", "age" => 12}) 
+            bob = Passenger.new({"name" => "Bob", "age" => 35}) 
+            ruby = Passenger.new({"name" => "Ruby", "age" => 9}) 
+
+            vehicle1.add_passenger(taylor)
+            vehicle1.add_passenger(jude)
+            vehicle2.add_passenger(charlie)       
+            vehicle3.add_passenger(bob)
+            vehicle3.add_passenger(ruby)    
+            
+            park.add_vehicle(vehicle1)
+            park.add_vehicle(vehicle2)
+            park.add_vehicle(vehicle3)
+
+            expected = ["Bob", "Charlie", "Jude", "Ruby", "Taylor"]
+
+            expect(park.attendee_names).to eq expected
+        end
+    end
+
+    describe "#minors" do
+        it 'returns list of all minors' do
+            park = Park.new('Shenandoah', 20)
+            
+            vehicle1 = Vehicle.new("2001", "Honda", "Civic") 
+            vehicle2 = Vehicle.new("2018", "VW", "Tiguan")
+            vehicle3 = Vehicle.new("2016", "Ford", "Fiesta")
+
+            charlie = Passenger.new({"name" => "Charlie", "age" => 18})
+            jude = Passenger.new({"name" => "Jude", "age" => 20}) 
+            taylor = Passenger.new({"name" => "Taylor", "age" => 12}) 
+            bob = Passenger.new({"name" => "Bob", "age" => 35}) 
+            ruby = Passenger.new({"name" => "Ruby", "age" => 9}) 
+
+            vehicle1.add_passenger(taylor)
+            vehicle1.add_passenger(jude)
+            vehicle2.add_passenger(charlie)       
+            vehicle3.add_passenger(bob)
+            vehicle3.add_passenger(ruby)    
         
-            expect(park1.admission_collected).to eq(0)
+            park.add_vehicle(vehicle1)
+            park.add_vehicle(vehicle2)
+            park.add_vehicle(vehicle3)
+
+            expect(park.minors).to eq([ruby, taylor])
         end
     end
 end
